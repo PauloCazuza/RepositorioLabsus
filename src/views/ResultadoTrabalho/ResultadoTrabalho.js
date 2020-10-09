@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import { useParams } from "react-router-dom";
+
+import firebase from "../../config/firebase";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -20,12 +24,6 @@ import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
 
 import profile from "assets/img/faces/profile.png";
-
-import studio1 from "assets/img/examples/studio-1.jpg";
-import studio2 from "assets/img/examples/studio-2.jpg";
-import studio3 from "assets/img/examples/studio-3.jpg";
-import studio4 from "assets/img/examples/studio-4.jpg";
-import studio5 from "assets/img/examples/studio-5.jpg";
 import work1 from "assets/img/examples/olu-eletu.jpg";
 import work2 from "assets/img/examples/clem-onojeghuo.jpg";
 import work3 from "assets/img/examples/cynthia-del-rio.jpg";
@@ -36,6 +34,8 @@ import styles from "assets/jss/material-kit-react/views/profilePage.js";
 
 const useStyles = makeStyles(styles);
 
+const db = firebase.firestore().collection("trabalhos");
+
 export default function DetalheArtigo(props) {
   const classes = useStyles();
   const { ...rest } = props;
@@ -45,11 +45,36 @@ export default function DetalheArtigo(props) {
     classes.imgFluid
   );
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
+
+  const [trabalho, setTrabalho] = useState(null);
+  let { id } = useParams();
+
+  useEffect(() => {
+    receberDoBD();
+  }, []);
+
+  function receberDoBD() {
+    db.doc(id)
+      .get()
+      .then(async (doc) => {
+        let listaDeTrab = [];
+
+        if (!doc.exists) {
+          console.log("No such document!");
+        } else {
+          setTrabalho(doc.data());
+          console.log("Document data:", doc.data());
+        }
+      })
+      .catch((erro) => {
+        alert("Problema de Conexão");
+        console.log(erro);
+      });
+  }
   return (
     <div>
       <Header
         color="transparent"
-        brand="Material Kit React"
         rightLinks={<HeaderLinks />}
         fixed
         changeColorOnScroll={{
@@ -78,73 +103,110 @@ export default function DetalheArtigo(props) {
                     />
                   </div>
                   <div className={classes.name}>
-                    <h3 className={classes.title}>TÍTULO</h3>
-                    <h6>ARTIGO OU TESTE ...</h6>
+                    <h3 className={classes.title}>
+                      {trabalho && trabalho.Titulo}
+                    </h3>
+                    <h6>{trabalho && trabalho.Autores}</h6>
                   </div>
                 </div>
               </GridItem>
             </GridContainer>
-            <div className={classes.description}>
-              <p>Resumo do Artigo, autores, informaçoes do aritgo.</p>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "justify",
+                textJustify: "inter-word",
+              }}
+            >
+              <p>
+                {trabalho && (
+                  <>
+                    <b>RESUMO: </b> {trabalho.Resumo}
+                  </>
+                )}
+              </p>
             </div>
+            {/* <div style={{ display: "flex", flexDirection: "row" }}> */}
             <GridContainer justify="center">
-              <GridItem xs={12} sm={12} md={8} className={classes.navWrapper}>
-                <NavPills
-                  alignCenter
-                  color="primary"
-                  tabs={[
-                    {
-                      tabButton: "Resumo",
-                      tabIcon: Camera,
-                      tabContent: (
-                        <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
-                            <p>Resumo</p>
-                          </GridItem>
-                        </GridContainer>
-                      ),
-                    },
-                    {
-                      tabButton: "Como citar",
-                      tabIcon: Palette,
-                      tabContent: (
-                        <GridContainer justify="center">
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={work1}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={work2}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={work3}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <img
-                              alt="..."
-                              src={work4}
-                              className={navImageClasses}
-                            />
-                            <img
-                              alt="..."
-                              src={work5}
-                              className={navImageClasses}
-                            />
-                          </GridItem>
-                        </GridContainer>
-                      ),
-                    },
-                  ]}
-                />
+              <GridItem
+                xs={12}
+                sm={12}
+                md={4}
+                className={classes.navWrapper}
+                direction="column"
+                style={{ textAlign: "initial" }}
+              >
+                <div>
+                  <b>Autores:</b> {trabalho && trabalho.Autores}
+                </div>
+                <div>
+                  <b>Data de publicação:</b>{" "}
+                  {trabalho &&
+                    new Date(
+                      trabalho.DataDePublicacao.seconds * 1000
+                    ).toLocaleDateString("pt-BR")}
+                </div>
+                <div>
+                  <b>Tipo:</b> {trabalho && "Não definido ainda"}
+                </div>
+                <div>
+                  <b>Palavras-chave:</b> {trabalho && trabalho.Autores}
+                </div>
+              </GridItem>
+              <GridItem
+                xs={12}
+                sm={12}
+                md={4}
+                className={classes.navWrapper}
+                direction="column"
+              >
+                <div>
+                  <div>
+                    <h5>COMO CITAR</h5>
+                  </div>
+
+                  <Button color="default" round>
+                    ABNT
+                  </Button>
+
+                  <Button color="default" round>
+                    VANCOUVER
+                  </Button>
+
+                  <Button color="default" round>
+                    APA
+                  </Button>
+                </div>
+              </GridItem>
+
+              <GridItem
+                xs={12}
+                sm={12}
+                md={4}
+                className={classes.navWrapper}
+                direction="column"
+              >
+                <div>
+                  <div>
+                    <h5>DOWNLOAD</h5>
+                  </div>
+
+                  <Button
+                    href={
+                      trabalho &&
+                      `https://drive.google.com/uc?authuser=0&id=${
+                        trabalho.Link.split("/")[5]
+                      }&export=download`
+                    }
+                    color="default"
+                    round
+                  >
+                    DOWNLOAD
+                  </Button>
+                </div>
               </GridItem>
             </GridContainer>
+            {/* </div> */}
           </div>
         </div>
       </div>

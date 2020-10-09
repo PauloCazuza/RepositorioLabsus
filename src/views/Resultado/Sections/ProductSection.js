@@ -14,9 +14,10 @@ import styles from "assets/jss/material-kit-react/views/landingPageSections/prod
 
 const useStyles = makeStyles(styles);
 
-export default function ProductSection() {
+export default function ProductSection({ listaDeTrab }) {
   const [arrayTeste, setArray] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const classes = useStyles();
+
   return (
     <div className={classes.section}>
       <GridContainer justify="center">
@@ -31,21 +32,28 @@ export default function ProductSection() {
       </GridContainer>
       <div>
         <GridContainer>
-          {arrayTeste.map((item, index) => {
-            return (
-              <GridItem key={index} xs={12} sm={12} md={4}>
-                <Link to="/ResultadoTrabalho">
-                  <InfoArea
-                    title="Título do Artigo"
-                    description="Aqui vai as descrições do artigo, como autor, tema, a definir"
-                    icon={Description}
-                    iconColor="info"
-                    vertical
-                  />
-                </Link>
-              </GridItem>
-            );
-          })}
+          {listaDeTrab &&
+            listaDeTrab.map((item, index) => {
+              return (
+                <GridItem key={index} xs={12} sm={12} md={4}>
+                  <Link to={"/ResultadoTrabalho/" + item.id}>
+                    <InfoArea
+                      title={item.Titulo.toUpperCase()}
+                      description={
+                        item.Autores +
+                        " | " +
+                        new Date(
+                          item.DataDePublicacao.seconds * 1000
+                        ).toLocaleDateString("pt-BR")
+                      }
+                      icon={Description}
+                      iconColor="info"
+                      vertical
+                    />
+                  </Link>
+                </GridItem>
+              );
+            })}
         </GridContainer>
       </div>
     </div>

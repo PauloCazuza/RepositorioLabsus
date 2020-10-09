@@ -24,7 +24,7 @@ ReactDOM.render(
       <Route path="/login-page" component={LoginPage} />
       <Route path="/Components" component={Components} />
       <Route path="/Resultado" component={Resultado} />
-      <Route path="/ResultadoTrabalho" component={ResultadoTrabalho} />
+      <Route path="/ResultadoTrabalho/:id" component={ResultadoTrabalho} />
       <Route path="/" component={Inicio} />
     </Switch>
   </Router>,
