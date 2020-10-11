@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { StylesProvider } from "@material-ui/core/styles";
 import { createBrowserHistory } from "history";
+
+import { makeStyles } from "@material-ui/core/styles";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import "assets/scss/material-kit-react.scss?v=1.9.0";
@@ -16,6 +18,9 @@ import Resultado from "views/Resultado/Resultado.js";
 import ResultadoTrabalho from "views/ResultadoTrabalho/ResultadoTrabalho.js";
 
 // var hist = createBrowserHistory();
+
+import styles from "assets/jss/material-kit-react/views/components.js";
+const useStyles = makeStyles(styles, { index: 1 });
 
 ReactDOM.render(
   <StylesProvider>

@@ -20,7 +20,7 @@ import SectionDownload from "./Sections/SectionDownload.js";
 
 import styles from "assets/jss/material-kit-react/views/components.js";
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles, {index: 1});
 
 export default function Inicio(props) {
   const classes = useStyles();
