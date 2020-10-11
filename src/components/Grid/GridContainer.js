@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import "assets/scss/material-kit-react.scss?v=1.9.0";
 
 const styles = {
   grid: {

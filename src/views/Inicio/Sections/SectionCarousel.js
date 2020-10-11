@@ -15,6 +15,7 @@ import image2 from "assets/img/bg2.jpg";
 import image3 from "assets/img/bg3.jpg";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/carouselStyle.js";
+import "assets/scss/material-kit-react.scss?v=1.9.0";
 
 const useStyles = makeStyles(styles);
 

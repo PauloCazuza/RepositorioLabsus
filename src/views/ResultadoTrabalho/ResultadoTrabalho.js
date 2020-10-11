@@ -24,11 +24,6 @@ import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
 
 import profile from "assets/img/faces/profile.png";
-import work1 from "assets/img/examples/olu-eletu.jpg";
-import work2 from "assets/img/examples/clem-onojeghuo.jpg";
-import work3 from "assets/img/examples/cynthia-del-rio.jpg";
-import work4 from "assets/img/examples/mariya-georgieva.jpg";
-import work5 from "assets/img/examples/clem-onojegaw.jpg";
 
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
 
@@ -140,7 +135,7 @@ export default function DetalheArtigo(props) {
                   <b>Autores:</b> {trabalho && trabalho.Autores}
                 </div>
                 <div>
-                  <b>Data de publicação:</b>{" "}
+                  <b>Data de publicação: </b>
                   {trabalho &&
                     new Date(
                       trabalho.DataDePublicacao.seconds * 1000

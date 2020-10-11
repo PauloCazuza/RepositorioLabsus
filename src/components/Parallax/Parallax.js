@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // core components
 import styles from "assets/jss/material-kit-react/components/parallaxStyle.js";
+import "assets/scss/material-kit-react.scss?v=1.9.0";
 
 const useStyles = makeStyles(styles);
 
