@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Link } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import "assets/scss/material-kit-react.scss?v=1.9.0";
 // @material-ui/icons
 // core components
 import Header from "components/Header/Header.js";
