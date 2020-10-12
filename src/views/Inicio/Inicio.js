@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { Link } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import "assets/scss/material-kit-react.scss?v=1.9.0";
 // @material-ui/icons
 // core components
 import Header from "components/Header/Header.js";
@@ -49,7 +48,7 @@ export default function Inicio(props) {
                   Espaço destinado para armazenar, preservar, organizar e
                   disseminar amplamente os resultados de pesquisa do Laboratório
                   de Pesquisa Social, Educação Transformadora e Saúde Coletiva -
-                  LABSUS testando só pra ver.
+                  LABSUS.
                 </h3>
                 <br />
                 <input
