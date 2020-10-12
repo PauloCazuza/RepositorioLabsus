@@ -49,7 +49,7 @@ export default function Inicio(props) {
                   Espaço destinado para armazenar, preservar, organizar e
                   disseminar amplamente os resultados de pesquisa do Laboratório
                   de Pesquisa Social, Educação Transformadora e Saúde Coletiva -
-                  LABSUS.
+                  LABSUS testando só pra ver.
                 </h3>
                 <br />
                 <input
