@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
+import { css } from "@emotion/core";
+import { BounceLoader as Spinner } from "react-spinners";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,25 +17,25 @@ import styles from "assets/jss/material-kit-react/views/landingPageSections/prod
 
 const useStyles = makeStyles(styles);
 
-export default function ProductSection({ listaDeTrab }) {
-  const [arrayTeste, setArray] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+export default function ProductSection({ listaDeTrab, titulo }) {
+  // const [arrayTeste, setArray] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const classes = useStyles();
 
   return (
-    <div className={classes.section}>
+    <div className={classes.section} style={{ paddingTop: "10px" }}>
       <GridContainer justify="center">
         <GridItem xs={12} sm={12} md={8}>
           <h2 className={classes.title}>
-            Resultados de Violência no Adolescente
+            {titulo ? "Resultados para " + titulo : "Nossos trabalhos"}
           </h2>
-          <h5 className={classes.description}>
+          {/* <h5 className={classes.description}>
             Mostrar quais filtros devem ser aqui.
-          </h5>
+          </h5> */}
         </GridItem>
       </GridContainer>
       <div>
         <GridContainer>
-          {listaDeTrab &&
+          {listaDeTrab ? (
             listaDeTrab.map((item, index) => {
               return (
                 <GridItem key={index} xs={12} sm={12} md={4}>
@@ -53,9 +56,34 @@ export default function ProductSection({ listaDeTrab }) {
                   </Link>
                 </GridItem>
               );
-            })}
+            })
+          ) : (
+            <div
+              className="sweet-loading"
+              style={{
+                width: "100%",
+                display: "flex",
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Spinner
+                css={override}
+                size={150}
+                color={"#B2C8E0"}
+                loading={true}
+              />
+            </div>
+          )}
         </GridContainer>
       </div>
     </div>
   );
 }
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: "#B2C8E0";
+`;

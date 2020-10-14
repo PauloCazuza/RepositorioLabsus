@@ -4,6 +4,8 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
+import { useParams } from "react-router-dom";
+
 // @material-ui/icons
 
 // core components
@@ -32,6 +34,9 @@ const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const [listaDeTrab, setListaDeTrab] = useState(null);
+  const [inputFilter, setInputFilter] = useState("");
+  let { titulo } = useParams();
+  const [pesquisa, setPesquisa] = useState(titulo);
 
   const classes = useStyles();
   const { ...rest } = props;
@@ -40,20 +45,28 @@ export default function LandingPage(props) {
     receberDoBD();
   }, []);
 
-  function receberDoBD() {
-    //db //.where("validar", "==", "Validar")
+  function receberDoBD(titulo = titulo) {
+    setListaDeTrab(null);
+    setPesquisa(titulo);
+
     db.get()
       .then(async (resultado) => {
         let listaDeTrab = [];
-        for (let i = 0; i < 10; i++)
-          await resultado.docs.forEach((doc) => {
+        if (titulo) titulo = titulo.toUpperCase();
+
+        await resultado.docs.forEach((doc) => {
+          if (titulo) {
+            if (doc.data().Titulo.toUpperCase().includes(titulo))
+              listaDeTrab.push({
+                id: doc.id,
+                ...doc.data(),
+              });
+          } else
             listaDeTrab.push({
               id: doc.id,
               ...doc.data(),
             });
-          });
-
-        console.log(listaDeTrab);
+        });
 
         setListaDeTrab(listaDeTrab);
       })
@@ -92,6 +105,7 @@ export default function LandingPage(props) {
         >
           <input
             type="text"
+            onChange={(e) => setInputFilter(e.target.value)}
             style={{
               width: "50%",
               height: "8vh",
@@ -102,14 +116,18 @@ export default function LandingPage(props) {
               borderColor: "#67668B",
             }}
           />
-          <Button color="primary" round>
+          <Button
+            color="primary"
+            round
+            onClick={() => receberDoBD(inputFilter)}
+          >
             PESQUISAR
           </Button>
         </div>
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
-          <ProductSection listaDeTrab={listaDeTrab} />
+          <ProductSection listaDeTrab={listaDeTrab} titulo={pesquisa} />
         </div>
       </div>
       <Footer />

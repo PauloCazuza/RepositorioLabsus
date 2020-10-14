@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react components for routing our app without refresh
@@ -20,9 +20,10 @@ import SectionDownload from "./Sections/SectionDownload.js";
 
 import styles from "assets/jss/material-kit-react/views/components.js";
 
-const useStyles = makeStyles(styles, {index: 1});
+const useStyles = makeStyles(styles, { index: 1 });
 
 export default function Inicio(props) {
+  const [inputFilter, setInputFilter] = useState("");
   const classes = useStyles();
   const { ...rest } = props;
   return (
@@ -53,12 +54,13 @@ export default function Inicio(props) {
                 <br />
                 <input
                   type="text"
+                  onChange={(e) => setInputFilter(e.target.value)}
                   style={{
                     width: "50%",
-                    height: "8vh",
+                    height: "7vh",
                     borderRadius: "50px",
-                    padding: "5px",
-                    fontSize: "5vh",
+                    padding: "10px",
+                    fontSize: "4vh",
                     border: "solid",
                     borderColor: "#67668B",
                   }}
@@ -72,7 +74,7 @@ export default function Inicio(props) {
                     width: "50%",
                   }}
                 >
-                  <Link to="/Resultado">
+                  <Link to={"/Resultado/" + inputFilter}>
                     <Button color="primary" round>
                       PESQUISAR
                     </Button>

@@ -25,6 +25,7 @@ ReactDOM.render(
       <Route path="/profile-page" component={ProfilePage} />
       <Route path="/login-page" component={LoginPage} />
       <Route path="/Components" component={Components} />
+      <Route path="/Resultado/:titulo" component={Resultado} />
       <Route path="/Resultado" component={Resultado} />
       <Route path="/ResultadoTrabalho/:id" component={ResultadoTrabalho} />
       <Route path="/" component={Inicio} />

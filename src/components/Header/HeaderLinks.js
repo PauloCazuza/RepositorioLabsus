@@ -26,7 +26,7 @@ export default function HeaderLinks(props) {
   const classes = useStyles();
   return (
     <List className={classes.list}>
-      <ListItem className={classes.listItem}>
+      {/* <ListItem className={classes.listItem}>
         <CustomDropdown
           noLiPadding
           buttonText="Mais"
@@ -58,7 +58,7 @@ export default function HeaderLinks(props) {
         >
            Sobre Nós
         </Button>
-      </ListItem>
+      </ListItem> */}
     </List>
   );
 }

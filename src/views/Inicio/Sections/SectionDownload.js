@@ -19,7 +19,16 @@ export default function SectionDownload() {
         <GridContainer className={classes.textCenter} justify="center">
           <GridItem xs={12} sm={12} md={8}>
             <h2>Introdução</h2>
-            <h4>Aqui terá uma introdução a ser escrita.</h4>
+            <h4>
+              Sejam bem vindos ao repositório do grupo de pesquisa Labsus!
+            </h4>
+            <h4 style={{ textAlign: "justify", textJustify: "inter-word" }}>
+              &emsp;
+              {` Repositório LABSUS é um espaço criado pelo grupo de pesquisa Laboratório de Pesquisa Social, Educação Transformadora e Saúde Coletiva - LABSUS com o objetivo de compartilhar com a comunidade acadêmico e demais interessados as produções sistematizados pelo grupo. Nos links abaixo você pode navegar por nossas produções separadas por artigos em periódicos, dissertações e capítulos de livro.`}
+            </h4>
+            <h4>
+              Vem conhecer um pouco dos nossos ideais e projetos desenvolvidos.
+            </h4>
           </GridItem>
           {/* <GridItem xs={12} sm={8} md={6}>
             <Button
@@ -41,7 +50,11 @@ export default function SectionDownload() {
           </GridItem> */}
           <GridItem xs={12} sm={12} md={8}>
             <h2>Nossas temáticas</h2>
-            <h4>Trabalhamos com estes tipos de trabalhos ...</h4>
+            <h4>Saúde Coletiva (Tema Central)</h4>
+            <h4> Saúde do Adolescente </h4>
+            <h4>Competências Socioemocionais</h4>
+            <h4> Tecnologias Digitais de Informação e Comunicação (TDIC)</h4>
+            <h4>Saúde Mental</h4>
           </GridItem>
         </GridContainer>
       </div>

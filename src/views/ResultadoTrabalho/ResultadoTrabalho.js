@@ -5,14 +5,10 @@ import { useParams } from "react-router-dom";
 import firebase from "../../config/firebase";
 // nodejs library that concatenates classes
 import classNames from "classnames";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
-import Camera from "@material-ui/icons/Camera";
-import Palette from "@material-ui/icons/Palette";
-import Favorite from "@material-ui/icons/Favorite";
-
-import Description from "@material-ui/icons/Description";
 // core components
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
@@ -22,10 +18,21 @@ import GridItem from "components/Grid/GridItem.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
-
 import profile from "assets/img/faces/profile.png";
-
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
+import { xmlAbnt } from "./abntXml/abnt";
+import { classicNameResolver } from "typescript";
+const { Cite, plugins, Citation } = require("@citation-js/core");
+require("@citation-js/plugin-csl");
+require("@citation-js/core/package.json");
+
+let ABNT = "abnt";
+
+// Cite.plugins.config.get("csl").templates.add(ABNT, xmlAbnt);
+
+let config = plugins.config.get("@csl");
+config.templates.add(ABNT, xmlAbnt);
+// Citation.CSL.register.addTemplate(ABNT, xmlAbnt);
 
 const useStyles = makeStyles(styles);
 
@@ -48,6 +55,43 @@ export default function DetalheArtigo(props) {
     receberDoBD();
   }, []);
 
+  function gerarReferencias(cls = "abnt") {
+    //  debugger;
+
+    const { Titulo, Autores, DataDePublicacao } = trabalho;
+
+    if (!Titulo) return;
+
+    const autor = Autores.split(" ");
+    const sobrenomeDoAutor = autor[autor.length - 1];
+    let nomeDoAutor = "";
+
+    for (let i = 0; i < autor.length - 1; i++) nomeDoAutor += autor[i] + " ";
+
+    const Ano = new Date(
+      trabalho.DataDePublicacao.seconds * 1000
+    ).getFullYear();
+
+    let cite = new Cite({
+      type: "article-journal",
+      title: Titulo,
+      author: [{ family: sobrenomeDoAutor, given: nomeDoAutor }],
+      issued: { "date-parts": [[Ano]] },
+    });
+
+    let date = new Date().toLocaleDateString();
+
+    let teste = cite.format("bibliography", {
+      format: "text",
+      template: cls,
+      append: ` Acessado em ${date}`,
+    });
+
+    navigator.clipboard.writeText(teste);
+
+    alert("Referência copiado com sucesso !");
+  }
+
   function receberDoBD() {
     db.doc(id)
       .get()
@@ -58,7 +102,7 @@ export default function DetalheArtigo(props) {
           console.log("No such document!");
         } else {
           setTrabalho(doc.data());
-          console.log("Document data:", doc.data());
+          // console.log("Document data:", doc.data().Titulo);
         }
       })
       .catch((erro) => {
@@ -160,15 +204,27 @@ export default function DetalheArtigo(props) {
                     <h5>COMO CITAR</h5>
                   </div>
 
-                  <Button color="default" round>
+                  <Button
+                    color="default"
+                    round
+                    onClick={() => gerarReferencias(ABNT)}
+                  >
                     ABNT
                   </Button>
 
-                  <Button color="default" round>
+                  <Button
+                    color="default"
+                    round
+                    onClick={() => gerarReferencias("vancouver")}
+                  >
                     VANCOUVER
                   </Button>
 
-                  <Button color="default" round>
+                  <Button
+                    color="default"
+                    round
+                    onClick={() => gerarReferencias("apa")}
+                  >
                     APA
                   </Button>
                 </div>
@@ -201,6 +257,14 @@ export default function DetalheArtigo(props) {
                 </div>
               </GridItem>
             </GridContainer>
+            {/* {cite.format("bibliography", {
+              format: "html",
+              template: "apa",
+              prepend(entry) {
+                return `[${entry.id}]: `;
+              },
+              append: ` [Retrieved on ${date}]`,
+            })} */}
             {/* </div> */}
           </div>
         </div>
