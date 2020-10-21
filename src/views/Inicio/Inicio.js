@@ -88,7 +88,7 @@ export default function Inicio(props) {
 
       <div className={classNames(classes.main, classes.mainRaised)}>
         <SectionDownload />
-        <SectionCarousel />
+        {/* <SectionCarousel /> */}
       </div>
       <Footer />
     </div>

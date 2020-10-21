@@ -185,9 +185,9 @@ export default function DetalheArtigo(props) {
                       trabalho.DataDePublicacao.seconds * 1000
                     ).toLocaleDateString("pt-BR")}
                 </div>
-                <div>
+                {/* <div>
                   <b>Tipo:</b> {trabalho && "Não definido ainda"}
-                </div>
+                </div> */}
                 <div>
                   <b>Palavras-chave:</b> {trabalho && trabalho.Autores}
                 </div>
