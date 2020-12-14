@@ -1,27 +1,61 @@
 import React, { useState, useEffect } from "react";
+import classNames from "classnames";
+import Parallax from "components/Parallax/Parallax.js";
 import fire from "firebase/app";
 import "firebase/firestore";
+import styles from "assets/jss/material-kit-react/views/profilePage.js";
+import CustomInput from 'components/CustomInput/CustomInput.js';
+import Button from "components/CustomButtons/Button.js";
 
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import firebase from "../../config/firebase";
 
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
 const db = firebase.firestore().collection("trabalhos");
+
+
+const useStyles = makeStyles(styles);
 
 export default function Entrada() {
   const [Autores, setAutores] = useState("");
-  const [DataDePublicacao, setDataDePublicacao] = useState("");
+  const [DataDePublicacao, setDataDePublicacao] = useState(formatDate(new Date()));
   const [Link, setLink] = useState("");
   const [Resumo, setResumo] = useState("");
   const [Titulo, setTitulo] = useState("");
   const [PalavrasChave, setPalavrasChave] = useState("");
   const [message, setMessage] = useState("");
 
+  const classes = useStyles();
+
+  const imageClasses = classNames(
+    classes.imgRaised,
+    classes.imgRoundedCircle,
+    classes.imgFluid
+  );  
+
+  function formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2)
+      month = '0' + month;
+    if (day.length < 2)
+      day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
   function limparParametros() {
     setAutores("");
-    setDataDePublicacao("");
+    setDataDePublicacao(formatDate(new Date()));
     setLink("");
     setResumo("");
+    setPalavrasChave('');
     setTitulo("");
   }
 
@@ -42,83 +76,169 @@ export default function Entrada() {
       Titulo,
     })
       .then(() => {
-        setMessage("Deu bom hehe");
+        alert('Seu trabalho foi cadastrado com sucesso!');
         limparParametros();
       })
       .catch((erro) => {
+        alert("Ocorreu um erro ao cadastrar seu trabalho, por favor verifique se os dados estão corretos.");
         setMessage("Deu erro >:( -->" + erro.message);
       });
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "90vh",
-      }}
-    >
-      <GridContainer direction="column">
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Titulo: </label>
-            <input value={Titulo} onChange={(e) => setTitulo(e.target.value)} />
+    <>
+
+      <Parallax
+        style={{ height: "30vh" }}
+        small
+        filter
+        image={require("assets/img/profile-bg.jpg")}
+      />
+
+      <div className={classNames(classes.main, classes.mainRaised)}>
+        <div
+          style={{
+            display: "flex",
+            padding: 10,
+            alignItems: "center",
+            justifyContent: "center"
+            // height: "90vh",
+          }}
+        >
+          <div className={classes.container}>
+
+            <GridContainer justify="center">
+              <GridItem xs={12} sm={12} md={6}>
+                <div className={classes.profile}>
+                  <div>
+                    <img
+                      src={require("assets/img/inputs.jpg")}
+                      alt="..."
+                      style={{ height: "150px", width: "150px", }}
+                      className={imageClasses}
+                    />
+                  </div>
+                  <div className={classes.name}>
+                    <h3 className={classes.title}>
+                      {'Cadastre de Trabalhos Cientificos'}
+                    </h3>
+                    {/* <h6>{trabalho && trabalho.Autores}</h6> */}
+                  </div>
+                </div>
+              </GridItem>
+            </GridContainer>
+            <GridContainer direction="row">
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Titulo"
+                  inputProps={{
+                    placeholder: "Titulo"
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setTitulo(e.target.value),
+                    value: Titulo
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Resumo"
+                  inputProps={{
+                    placeholder: "Resumo"
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setResumo(e.target.value),
+                    value: Resumo
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Autor"
+                  inputProps={{
+                    placeholder: "Autor"
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setAutores(e.target.value),
+                    value: Autores
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Palavras-Chave"
+                  inputProps={{
+                    placeholder: "Palavras-Chave"
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setPalavrasChave(e.target.value),
+                    value: PalavrasChave,
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Data de Publicação"
+                  inputProps={{
+                    // placeholder: Date.toString()
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setDataDePublicacao(e.target.value),
+                    value: DataDePublicacao,
+                    type: "date"
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <CustomInput
+                  labelText="Link"
+                  inputProps={{
+                    placeholder: "Link"
+                  }}
+                  formControlProps={{
+                    fullWidth: true
+                  }}
+                  inputProps={{
+                    onChange: (e) => setLink(e.target.value),
+                    value: Link,
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={12}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }} >
+                  <Button onClick={() => enviarParaOBD()} round>
+                    ENVIAR
+                </Button>
+                </div>
+              </GridItem>
+              <GridItem xs={12} sm={12} md={4}>
+                <div>
+                  <label style={{ width: "100%" }}> {message} </label>
+                </div>
+              </GridItem>
+            </GridContainer>
           </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Resumo: </label>
-            <input value={Resumo} onChange={(e) => setResumo(e.target.value)} />
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Autor: </label>
-            <input
-              value={Autores}
-              onChange={(e) => setAutores(e.target.value)}
-            />
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Palavras-Chave: </label>
-            <input
-              value={PalavrasChave}
-              onChange={(e) => setPalavrasChave(e.target.value)}
-            />
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Data de Publicação: </label>
-            <input
-              type="date"
-              value={DataDePublicacao}
-              onChange={(e) => setDataDePublicacao(e.target.value)}
-            />
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label> Link: </label>
-            <input value={Link} onChange={(e) => setLink(e.target.value)} />
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <button style={{ width: "100%" }} onClick={() => enviarParaOBD()}>
-              Enviar
-            </button>
-          </div>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <div>
-            <label style={{ width: "100%" }}> {message} </label>
-          </div>
-        </GridItem>
-      </GridContainer>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
+
+const styleInput = {
+  width: "100%"
+};

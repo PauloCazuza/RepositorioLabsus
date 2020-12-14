@@ -28,6 +28,15 @@ require("@citation-js/core/package.json");
 
 let ABNT = "abnt";
 
+function StringPalavrasChave(PalavrasChaves) {
+  let string = "";
+
+  if (PalavrasChaves)
+    PalavrasChaves.map(item => string += "; " + item);
+
+  return string;
+}
+
 // Cite.plugins.config.get("csl").templates.add(ABNT, xmlAbnt);
 
 let config = plugins.config.get("@csl");
@@ -92,6 +101,15 @@ export default function DetalheArtigo(props) {
     alert("Referência copiado com sucesso !");
   }
 
+  function dataAtualFormatada(data) {
+    const dia = data.getDate().toString();
+    const diaF = (dia.length == 1) ? '0' + dia : dia;
+    const mes = (data.getMonth() + 1).toString(); //+1 pois no getMonth Janeiro começa com zero.
+    const mesF = (mes.length == 1) ? '0' + mes : mes;
+    const anoF = data.getFullYear();
+    return diaF + "/" + mesF + "/" + anoF;
+  }
+
   function receberDoBD() {
     db.doc(id)
       .get()
@@ -102,7 +120,7 @@ export default function DetalheArtigo(props) {
           console.log("No such document!");
         } else {
           setTrabalho(doc.data());
-          // console.log("Document data:", doc.data().Titulo);
+          console.log("Document data:", doc.data());
         }
       })
       .catch((erro) => {
@@ -180,16 +198,15 @@ export default function DetalheArtigo(props) {
                 </div>
                 <div>
                   <b>Data de publicação: </b>
-                  {trabalho &&
-                    new Date(
-                      trabalho.DataDePublicacao.seconds * 1000
-                    ).toLocaleDateString("pt-BR")}
+                  {trabalho && dataAtualFormatada(new Date(
+                    trabalho.DataDePublicacao.seconds * 1000
+                  ))}
                 </div>
                 {/* <div>
                   <b>Tipo:</b> {trabalho && "Não definido ainda"}
                 </div> */}
                 <div>
-                  <b>Palavras-chave:</b> {trabalho && trabalho.Autores}
+                  <b>Palavras-chave:</b> {trabalho && StringPalavrasChave(trabalho.PalavrasChave)}
                 </div>
               </GridItem>
               <GridItem
@@ -245,8 +262,7 @@ export default function DetalheArtigo(props) {
                   <Button
                     href={
                       trabalho &&
-                      `https://drive.google.com/uc?authuser=0&id=${
-                        trabalho.Link.split("/")[5]
+                      `https://drive.google.com/uc?authuser=0&id=${trabalho.Link.split("/")[5]
                       }&export=download`
                     }
                     color="default"

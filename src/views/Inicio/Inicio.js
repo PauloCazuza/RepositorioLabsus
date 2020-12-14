@@ -65,7 +65,7 @@ export default function Inicio(props) {
                     borderColor: "#67668B",
                   }}
                 />
-                ´<br />
+                <br />
                 <div
                   style={{
                     display: "flex",
