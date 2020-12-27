@@ -65,6 +65,9 @@ export default function Entrada() {
     if (PalavrasChave.includes(";")) palavraChave = PalavrasChave.split(";");
     else palavraChave = [PalavrasChave];
 
+    if (!(Autores && Link && Resumo && PalavrasChave && Titulo))
+      return alert("Preencha os campos corretamente");
+
     db.add({
       Autores,
       DataDePublicacao: fire.firestore.Timestamp.fromDate(
@@ -120,7 +123,7 @@ export default function Entrada() {
                   </div>
                   <div className={classes.name}>
                     <h3 className={classes.title}>
-                      {'Cadastre de Trabalhos Cientificos'}
+                      {'Cadastro de Trabalhos Cientificos'}
                     </h3>
                     {/* <h6>{trabalho && trabalho.Autores}</h6> */}
                   </div>

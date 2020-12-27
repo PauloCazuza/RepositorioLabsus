@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AuthContext from "../../contexts/auth.js";
+import { Redirect } from "react-router-dom";
+import firebase from '../../config/firebase';
+import 'firebase/auth';
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import People from "@material-ui/icons/People";
 // core components
 import Header from "components/Header/Header.js";
@@ -26,17 +33,56 @@ import image from "assets/img/bg7.jpg";
 const useStyles = makeStyles(styles);
 
 export default function LoginPage(props) {
-  const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
+  const { logado, setStatus } = useContext(AuthContext);
+  const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [carregando, setCarregando] = useState(false);
+  // const [logado, setLogado] = useState(false);
 
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
+
+  function logar() {
+    setCarregando(true);
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(async resultado => {
+      setCarregando(false);
+      setStatus(true);
+
+    }).catch(erro => {
+      console.log(erro)
+      alert(getMessageByErrorCode(erro.code));
+      setCarregando(false);
+    })
+  }
+
+  function getMessageByErrorCode(errorCode) {
+    switch (errorCode) {
+      case "auth/wrong-password":
+        return "Senha incorreta";
+      case "auth/invalid-email":
+        return "Email invalido";
+      case "auth/user-not-found":
+        return "Usuário não encontrado";
+      case "auth/network-request-failed":
+        return "Sem conexão a internet";
+      default:
+        return "Error desconhecido";
+    }
+  }
+
   const classes = useStyles();
   const { ...rest } = props;
+
+  if (logado) {
+    return <Redirect to='/EntradaDeDados' />;
+  }
+
   return (
     <div>
+
       <Header
         absolute
         color="transparent"
@@ -44,6 +90,7 @@ export default function LoginPage(props) {
         rightLinks={<HeaderLinks />}
         {...rest}
       />
+
       <div
         className={classes.pageHeader}
         style={{
@@ -70,6 +117,7 @@ export default function LoginPage(props) {
                       }}
                       inputProps={{
                         type: "email",
+                        onChange: (e) => setEmail(e.target.value),
                         endAdornment: (
                           <InputAdornment position="end">
                             <Email className={classes.inputIconsColor} />
@@ -85,6 +133,12 @@ export default function LoginPage(props) {
                       }}
                       inputProps={{
                         type: "password",
+                        onChange: (e) => setPassword(e.target.value),
+                        onKeyDown: (e) => {
+                          if (e.which == 13 || e.keyCode == 13) {
+                            logar();
+                          }
+                        },
                         endAdornment: (
                           <InputAdornment position="end">
                             <Icon className={classes.inputIconsColor}>
@@ -97,9 +151,14 @@ export default function LoginPage(props) {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
-                      Logar
-                    </Button>
+                    {
+                      !carregando ?
+                        <Button simple color="primary" size="lg" onClick={() => logar()}>
+                          Logar
+                      </Button>
+                        :
+                        <CircularProgress />
+                    }
                   </CardFooter>
                 </form>
               </Card>
