@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames";
+import Header from "components/Header/Header.js";
+import HeaderLinks from "components/Header/HeaderLinks.js";
+import Footer from "components/Footer/Footer.js";
 import Parallax from "components/Parallax/Parallax.js";
 import fire from "firebase/app";
 import "firebase/firestore";
@@ -19,7 +22,7 @@ const db = firebase.firestore().collection("trabalhos");
 
 const useStyles = makeStyles(styles);
 
-export default function Entrada() {
+export default function Entrada(props) {
   const [Autores, setAutores] = useState("");
   const [DataDePublicacao, setDataDePublicacao] = useState(formatDate(new Date()));
   const [Link, setLink] = useState("");
@@ -34,7 +37,7 @@ export default function Entrada() {
     classes.imgRaised,
     classes.imgRoundedCircle,
     classes.imgFluid
-  );  
+  );
 
   function formatDate(date) {
     var d = new Date(date),
@@ -65,6 +68,9 @@ export default function Entrada() {
     if (PalavrasChave.includes(";")) palavraChave = PalavrasChave.split(";");
     else palavraChave = [PalavrasChave];
 
+    if (!(Autores && Link && Resumo && PalavrasChave && Titulo))
+      return alert("Preencha os campos corretamente");
+
     db.add({
       Autores,
       DataDePublicacao: fire.firestore.Timestamp.fromDate(
@@ -85,8 +91,22 @@ export default function Entrada() {
       });
   }
 
+  const { ...rest } = props;
+
   return (
     <>
+
+      <Header
+        brand="Repositório LABSUS"
+        rightLinks={<HeaderLinks />}
+        fixed
+        color="transparent"
+        changeColorOnScroll={{
+          height: 400,
+          color: "white",
+        }}
+        {...rest}
+      />
 
       <Parallax
         style={{ height: "30vh" }}
@@ -120,7 +140,7 @@ export default function Entrada() {
                   </div>
                   <div className={classes.name}>
                     <h3 className={classes.title}>
-                      {'Cadastre de Trabalhos Cientificos'}
+                      {'Cadastro de Trabalhos Cientificos'}
                     </h3>
                     {/* <h6>{trabalho && trabalho.Autores}</h6> */}
                   </div>
@@ -235,6 +255,7 @@ export default function Entrada() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

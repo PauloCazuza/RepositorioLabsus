@@ -59,8 +59,9 @@ export default function Inicio(props) {
                     width: "50%",
                     height: "7vh",
                     borderRadius: "50px",
-                    padding: "10px",
-                    fontSize: "4vh",
+                    padding: "15px",
+                    fontFamily: "Roboto",
+                    fontSize: "3vh",
                     border: "solid",
                     borderColor: "#67668B",
                   }}

@@ -108,21 +108,23 @@ export default function LandingPage(props) {
             onChange={(e) => setInputFilter(e.target.value)}
             style={{
               width: "50%",
-              height: "8vh",
+              height: "7vh",
               borderRadius: "50px",
-              padding: "5px",
-              fontSize: "5vh",
+              padding: "15px",
+              fontSize: "3vh",
               border: "solid",
               borderColor: "#67668B",
             }}
           />
-          <Button
-            color="primary"
-            round
-            onClick={() => receberDoBD(inputFilter)}
-          >
-            PESQUISAR
+          <div style={{display: "flex", justifyContent: "flex-end", width: "50%"}} >
+            <Button
+              style={{ backgroundColor: "#00ACC1" }}
+              round
+              onClick={() => receberDoBD(inputFilter)}
+            >
+              PESQUISAR
           </Button>
+          </div>
         </div>
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
