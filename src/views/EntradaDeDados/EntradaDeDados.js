@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames";
+import Header from "components/Header/Header.js";
+import HeaderLinks from "components/Header/HeaderLinks.js";
+import Footer from "components/Footer/Footer.js";
 import Parallax from "components/Parallax/Parallax.js";
 import fire from "firebase/app";
 import "firebase/firestore";
@@ -19,7 +22,7 @@ const db = firebase.firestore().collection("trabalhos");
 
 const useStyles = makeStyles(styles);
 
-export default function Entrada() {
+export default function Entrada(props) {
   const [Autores, setAutores] = useState("");
   const [DataDePublicacao, setDataDePublicacao] = useState(formatDate(new Date()));
   const [Link, setLink] = useState("");
@@ -34,7 +37,7 @@ export default function Entrada() {
     classes.imgRaised,
     classes.imgRoundedCircle,
     classes.imgFluid
-  );  
+  );
 
   function formatDate(date) {
     var d = new Date(date),
@@ -88,8 +91,22 @@ export default function Entrada() {
       });
   }
 
+  const { ...rest } = props;
+
   return (
     <>
+
+      <Header
+        brand="Repositório LABSUS"
+        rightLinks={<HeaderLinks />}
+        fixed
+        color="transparent"
+        changeColorOnScroll={{
+          height: 400,
+          color: "white",
+        }}
+        {...rest}
+      />
 
       <Parallax
         style={{ height: "30vh" }}
@@ -238,6 +255,7 @@ export default function Entrada() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

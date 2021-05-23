@@ -6,7 +6,6 @@ export function AuthProvider({ children }) {
     const [ logado, setLogado ] = useState(false);
 
     function setStatus(status) {
-        alert(status);
         setLogado(status);
     }
 

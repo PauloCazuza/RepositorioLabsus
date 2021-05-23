@@ -40,7 +40,7 @@ export default function Rotas() {
     return (
       <Router history={hist}>
         <Switch>
-          <Route path="/login-page" component={LoginPage} />
+          <Route path="/Login" component={LoginPage} />
           <Route path="/Resultado/:titulo" component={Resultado} />
           <Route path="/Resultado" component={Resultado} />
           <Route path="/ResultadoTrabalho/:id" component={ResultadoTrabalho} />

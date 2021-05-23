@@ -32,9 +32,9 @@ function StringPalavrasChave(PalavrasChaves) {
   let string = "";
 
   if (PalavrasChaves)
-    PalavrasChaves.map(item => string += "; " + item);
+    PalavrasChaves.map(item => string += item + "; ");
 
-  return string;
+  return string.replace(".", "");
 }
 
 // Cite.plugins.config.get("csl").templates.add(ABNT, xmlAbnt);
