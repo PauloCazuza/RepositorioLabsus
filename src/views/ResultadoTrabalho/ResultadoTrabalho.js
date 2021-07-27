@@ -32,9 +32,9 @@ function StringPalavrasChave(PalavrasChaves) {
   let string = "";
 
   if (PalavrasChaves)
-    PalavrasChaves.map(item => string += item + "; ");
+    PalavrasChaves.map(item => string += "; " + item);
 
-  return string.replace(".", "");
+  return string;
 }
 
 // Cite.plugins.config.get("csl").templates.add(ABNT, xmlAbnt);
@@ -56,6 +56,7 @@ export default function DetalheArtigo(props) {
     classes.imgFluid
   );
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
+  const [autores, setAutores] = useState([]);
 
   const [trabalho, setTrabalho] = useState(null);
   let { id } = useParams();
@@ -68,14 +69,32 @@ export default function DetalheArtigo(props) {
     //  debugger;
 
     const { Titulo, Autores, DataDePublicacao } = trabalho;
+    var arrayDeAutores = [];
 
     if (!Titulo) return;
 
-    const autor = Autores.split(" ");
-    const sobrenomeDoAutor = autor[autor.length - 1];
-    let nomeDoAutor = "";
+    const numeroDeAutores = autores.length;
 
-    for (let i = 0; i < autor.length - 1; i++) nomeDoAutor += autor[i] + " ";
+    for (let j = 0; j < numeroDeAutores; j++) {
+
+      const autor = autores[j].split(" ");
+      var sobrenomeDoAutor = ""; // autor[autor.length - 1];
+      var nomeDoAutor = autor[0];
+
+      for (let i = 1; i < (autor.length); i++) {
+        if (nomeDoAutor == "" || nomeDoAutor == " ") {
+          nomeDoAutor = autor[i];
+          continue;
+        } 
+        sobrenomeDoAutor += autor[i] + (i != (autor.length - 1) ? " " : "") ;
+      }
+
+      arrayDeAutores.push({ family: sobrenomeDoAutor, given: nomeDoAutor });
+
+      console.log(nomeDoAutor);
+    }
+
+    console.log(arrayDeAutores)
 
     const Ano = new Date(
       trabalho.DataDePublicacao.seconds * 1000
@@ -84,7 +103,7 @@ export default function DetalheArtigo(props) {
     let cite = new Cite({
       type: "article-journal",
       title: Titulo,
-      author: [{ family: sobrenomeDoAutor, given: nomeDoAutor }],
+      author: arrayDeAutores,
       issued: { "date-parts": [[Ano]] },
     });
 
@@ -120,6 +139,8 @@ export default function DetalheArtigo(props) {
           console.log("No such document!");
         } else {
           setTrabalho(doc.data());
+          const autores = doc.data().Autores.split(";");
+          setAutores(autores);
           console.log("Document data:", doc.data());
         }
       })
@@ -163,7 +184,7 @@ export default function DetalheArtigo(props) {
                     <h3 className={classes.title}>
                       {trabalho && trabalho.Titulo}
                     </h3>
-                    <h6>{trabalho && trabalho.Autores}</h6>
+                    <h6>{trabalho && autores[0]}</h6>
                   </div>
                 </div>
               </GridItem>

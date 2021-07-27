@@ -37,13 +37,15 @@ export default function ProductSection({ listaDeTrab, titulo }) {
         <GridContainer>
           {listaDeTrab ? (
             listaDeTrab.map((item, index) => {
+              const autor = item.Autores.split(";");
+
               return (
                 <GridItem key={index} xs={12} sm={12} md={4}>
                   <Link to={"/ResultadoTrabalho/" + item.id}>
                     <InfoArea
                       title={item.Titulo.toUpperCase()}
                       description={
-                        item.Autores +
+                        autor[0] +
                         " | " +
                         new Date(
                           item.DataDePublicacao.seconds * 1000
