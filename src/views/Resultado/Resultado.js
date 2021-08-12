@@ -4,6 +4,11 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+
+import Check from "@material-ui/icons/Check";
+
 import { useParams } from "react-router-dom";
 
 // @material-ui/icons
@@ -11,8 +16,7 @@ import { useParams } from "react-router-dom";
 // core components
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+
 import Button from "components/CustomButtons/Button.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
@@ -35,6 +39,7 @@ const useStyles = makeStyles(styles);
 export default function LandingPage(props) {
   const [listaDeTrab, setListaDeTrab] = useState(null);
   const [inputFilter, setInputFilter] = useState("");
+  const [checked, setChecked] = useState([]);
   let { titulo } = useParams();
   const [pesquisa, setPesquisa] = useState(titulo);
 
@@ -45,23 +50,53 @@ export default function LandingPage(props) {
     receberDoBD();
   }, []);
 
-  function receberDoBD(titulo = titulo) {
+  const handleToggle = value => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    setChecked(newChecked);
+  };
+
+  function receberDoBD(parametro = titulo) {
     setListaDeTrab(null);
-    setPesquisa(titulo);
+    setPesquisa(parametro);
+
+    const buscaPorTitulo = checked.indexOf("TITULO") > -1;
+    const buscaPorAutor = checked.indexOf("AUTOR") > -1;
+    const buscaPorPalavraChave = checked.indexOf("PALAVRA-CHAVE") > -1;
 
     db.get()
       .then(async (resultado) => {
         let listaDeTrab = [];
-        if (titulo) titulo = titulo.toUpperCase();
+        if (parametro) parametro = parametro.toUpperCase();
 
         await resultado.docs.forEach((doc) => {
-          if (titulo) {
-            if (doc.data().Titulo.toUpperCase().includes(titulo))
-              listaDeTrab.push({
-                id: doc.id,
-                ...doc.data(),
-              });
-          } else
+          console.log(doc.data())
+          console.log(doc.data().PalavrasChave)
+
+          if (parametro && buscaPorTitulo && doc.data().Titulo.toUpperCase().includes(parametro)) {
+            listaDeTrab.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          } else if (buscaPorAutor && doc.data().Autores.toUpperCase().includes(parametro)) {
+            listaDeTrab.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          } else if (buscaPorPalavraChave && doc.data().PalavrasChave && doc.data().PalavrasChave.some(substring => substring.toUpperCase().includes(parametro))) {
+            listaDeTrab.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          }
+
+          if (!buscaPorTitulo && !buscaPorAutor && !buscaPorPalavraChave)
             listaDeTrab.push({
               id: doc.id,
               ...doc.data(),
@@ -74,6 +109,14 @@ export default function LandingPage(props) {
         alert("Problema de Conexão");
         console.log(erro);
       });
+  }
+
+  function validaFiltros() {
+    const buscaPorTitulo = checked.indexOf("TITULO") > -1;
+    const buscaPorAutor = checked.indexOf("AUTOR") > -1;
+    const buscaPorPalavraChave = checked.indexOf("PALAVRA-CHAVE") > -1;
+
+    return buscaPorTitulo || buscaPorAutor || buscaPorPalavraChave || inputFilter.trim();
   }
 
   return (
@@ -106,24 +149,79 @@ export default function LandingPage(props) {
           <input
             type="text"
             onChange={(e) => setInputFilter(e.target.value)}
+            placeholder="Titulo, Autor, Palavra-Chave..."
             style={{
               width: "50%",
-              height: "7vh",
+              height: "8vh",
               borderRadius: "50px",
-              padding: "15px",
+              padding: "5px",
               fontSize: "3vh",
               border: "solid",
               borderColor: "#67668B",
             }}
           />
-          <div style={{display: "flex", justifyContent: "flex-end", width: "50%"}} >
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  tabIndex={-1}
+                  onClick={() => handleToggle("TITULO")}
+                  checked={checked.indexOf("TITULO") !== -1 ? true : false}
+                  checkedIcon={<Check className={classes.checkedIcon} />}
+                  icon={<Check className={classes.uncheckedIcon} />}
+                  classes={{
+                    checked: classes.checked,
+                    root: classes.checkRoot
+                  }}
+                />
+              }
+              classes={{ label: classes.label, root: classes.labelRoot }}
+              style={{ color: "black" }}
+              label="Titulo"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  tabIndex={-1}
+                  onClick={() => handleToggle("AUTOR")}
+                  checked={checked.indexOf("AUTOR") !== -1 ? true : false}
+                  checkedIcon={<Check className={classes.checkedIcon} />}
+                  icon={<Check className={classes.uncheckedIcon} />}
+                  classes={{
+                    checked: classes.checked,
+                    root: classes.checkRoot
+                  }}
+                />
+              }
+              classes={{ label: classes.label, root: classes.labelRoot }}
+              style={{ color: "black" }}
+              label="Autor"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  tabIndex={-1}
+                  onClick={() => handleToggle("PALAVRA-CHAVE")}
+                  checked={checked.indexOf("PALAVRA-CHAVE") !== -1 ? true : false}
+                  checkedIcon={<Check className={classes.checkedIcon} />}
+                  icon={<Check className={classes.uncheckedIcon} />}
+                  classes={{
+                    checked: classes.checked,
+                    root: classes.checkRoot
+                  }}
+                />
+              }
+              classes={{ label: classes.label, root: classes.labelRoot }}
+              style={{ color: "black" }}
+              label="Palavras Chave"
+            />
             <Button
-              style={{ backgroundColor: "#00ACC1" }}
+              color="primary"
               round
-              onClick={() => receberDoBD(inputFilter)}
+              onClick={() => validaFiltros() ? receberDoBD(inputFilter) : alert("Preencha o campo de pesquisa ou escolha um filtro.")}
             >
               PESQUISAR
-          </Button>
+            </Button>
           </div>
         </div>
       </Parallax>
