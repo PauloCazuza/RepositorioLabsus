@@ -37,10 +37,10 @@ const db = firebase.firestore().collection("trabalhos");
 const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
-  const [listaDeTrab, setListaDeTrab] = useState(null);
-  const [inputFilter, setInputFilter] = useState("");
-  const [checked, setChecked] = useState([]);
   let { titulo } = useParams();
+  const [listaDeTrab, setListaDeTrab] = useState(null);
+  const [checked, setChecked] = useState(["TITULO"]);
+  const [inputFilter, setInputFilter] = useState(titulo);
   const [pesquisa, setPesquisa] = useState(titulo);
 
   const classes = useStyles();
@@ -96,7 +96,7 @@ export default function LandingPage(props) {
             });
           }
 
-          if (!buscaPorTitulo && !buscaPorAutor && !buscaPorPalavraChave)
+          if ((!buscaPorTitulo && !buscaPorAutor && !buscaPorPalavraChave) || !parametro)
             listaDeTrab.push({
               id: doc.id,
               ...doc.data(),
@@ -116,7 +116,7 @@ export default function LandingPage(props) {
     const buscaPorAutor = checked.indexOf("AUTOR") > -1;
     const buscaPorPalavraChave = checked.indexOf("PALAVRA-CHAVE") > -1;
 
-    return buscaPorTitulo || buscaPorAutor || buscaPorPalavraChave || inputFilter.trim();
+    return (buscaPorTitulo || buscaPorAutor || buscaPorPalavraChave ) && (inputFilter && inputFilter.trim());
   }
 
   return (
@@ -150,6 +150,7 @@ export default function LandingPage(props) {
             type="text"
             onChange={(e) => setInputFilter(e.target.value)}
             placeholder="Titulo, Autor, Palavra-Chave..."
+            value={inputFilter}
             style={{
               width: "50%",
               height: "8vh",
@@ -216,7 +217,7 @@ export default function LandingPage(props) {
               label="Palavras Chave"
             />
             <Button
-              color="primary"
+              className="ButtonDefault"
               round
               onClick={() => validaFiltros() ? receberDoBD(inputFilter) : alert("Preencha o campo de pesquisa ou escolha um filtro.")}
             >

@@ -16,6 +16,7 @@ import Parallax from "components/Parallax/Parallax.js";
 // sections for this page
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import SectionDownload from "./Sections/SectionDownload.js";
+import Carousel from "../Carousel";
 
 import styles from "assets/jss/material-kit-react/views/components.js";
 
@@ -75,7 +76,7 @@ export default function Inicio(props) {
                   }}
                 >
                   <Link to={"/Resultado/" + inputFilter}>
-                    <Button color="primary" round>
+                    <Button className="ButtonDefault" round>
                       PESQUISAR
                     </Button>
                   </Link>
@@ -88,6 +89,7 @@ export default function Inicio(props) {
 
       <div className={classNames(classes.main, classes.mainRaised)}>
         <SectionDownload />
+        {/* <Carousel /> */}
         {/* <SectionCarousel /> */}
       </div>
       <Footer />

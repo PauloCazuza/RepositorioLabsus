@@ -45,6 +45,7 @@ export default function Rotas() {
           <Route path="/Resultado" component={Resultado} />
           <Route path="/ResultadoTrabalho/:id" component={ResultadoTrabalho} />
           {/* <Route path="/EntradaDeDados" component={EntradaDeDados} /> */}
+          {/* <Route path="/" component={Components} /> */}
           <Route path="/" component={Inicio} />
         </Switch>
       </Router>

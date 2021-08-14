@@ -26,7 +26,7 @@ export default function ProductSection({ listaDeTrab, titulo }) {
       <GridContainer justify="center">
         <GridItem xs={12} sm={12} md={8}>
           <h2 className={classes.title}>
-            {titulo ? "Resultados para " + titulo : "Nossos trabalhos"}
+            {titulo ? "Resultados para " + titulo : "Todos os Nossos Trabalhos"}
           </h2>
           {/* <h5 className={classes.description}>
             Mostrar quais filtros devem ser aqui.
